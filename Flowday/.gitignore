@@ -35,3 +35,4 @@ go.work.sum
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+/build
