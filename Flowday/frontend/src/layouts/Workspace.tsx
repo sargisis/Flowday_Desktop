@@ -7,6 +7,7 @@ import Tasks from "../pages/Tasks";
 import Analytics from "../pages/Analytics";
 import Messages from "../pages/Messages";
 import Team from "../pages/Team";
+import ProjectDetails from "../pages/ProjectDetails";
 
 export default function Workspace() {
     const [page, setPage] = useState("dashboard");
@@ -19,6 +20,7 @@ export default function Workspace() {
             {page === "analytics" && <Analytics />}
             {page === "messages" && <Messages />}
             {page === "team" && <Team />}
+            {page.startsWith("project-") && <ProjectDetails projectId={page.replace("project-", "")} />}
         </RootLayout>
     );
 }
