@@ -2,8 +2,12 @@ import { LayoutDashboard, Calendar, CheckSquare, BarChart2, MessageSquare, Users
 import { cn } from "../lib/utils";
 import { useState } from "react";
 
-export default function Sidebar() {
-    const [active, setActive] = useState("dashboard");
+interface SidebarProps {
+    activePage: string;
+    onNavigate: (page: string) => void;
+}
+
+export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
     const [projects, setProjects] = useState<string[]>([]); // Dynamic projects
 
     const menuItems = [
@@ -29,20 +33,20 @@ export default function Sidebar() {
                 {menuItems.map((item) => (
                     <button
                         key={item.id}
-                        onClick={() => setActive(item.id)}
+                        onClick={() => onNavigate(item.id)}
                         className={cn(
                             "w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-200 group relative",
-                            active === item.id
+                            activePage === item.id
                                 ? "text-text bg-surface"
                                 : "text-text-dim hover:text-text hover:bg-white/5"
                         )}
                     >
-                        {active === item.id && (
+                        {activePage === item.id && (
                             <div className="absolute left-0 w-1 h-5 bg-primary rounded-r-full shadow-[0_0_10px_rgba(0,240,255,0.5)]" />
                         )}
                         <item.icon size={18} className={cn(
                             "transition-colors",
-                            active === item.id ? "text-primary" : "group-hover:text-white"
+                            activePage === item.id ? "text-primary" : "group-hover:text-white"
                         )} />
                         {item.label}
                     </button>
