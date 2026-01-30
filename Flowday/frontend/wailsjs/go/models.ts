@@ -41,6 +41,7 @@ export namespace services {
 	    title: string;
 	    completed: boolean;
 	    createdAt: string;
+	    projectId: string;
 	
 	    static createFrom(source: any = {}) {
 	        return new Task(source);
@@ -52,6 +53,7 @@ export namespace services {
 	        this.title = source["title"];
 	        this.completed = source["completed"];
 	        this.createdAt = source["createdAt"];
+	        this.projectId = source["projectId"];
 	    }
 	}
 	export class UserProfile {

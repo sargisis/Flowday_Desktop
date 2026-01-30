@@ -20,7 +20,7 @@ export default function Workspace() {
             {page === "analytics" && <Analytics />}
             {page === "messages" && <Messages />}
             {page === "team" && <Team />}
-            {page.startsWith("project-") && <ProjectDetails projectId={page.replace("project-", "")} />}
+            {page.startsWith("project-") && <ProjectDetails projectId={page.replace("project-", "")} onNavigate={setPage} />}
         </RootLayout>
     );
 }

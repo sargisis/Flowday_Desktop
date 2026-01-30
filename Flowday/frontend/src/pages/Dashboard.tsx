@@ -10,20 +10,25 @@ export default function Dashboard() {
     const [tasks, setTasks] = useState<services.Task[]>([]);
     const [newTaskTitle, setNewTaskTitle] = useState("");
     const [hasProjects, setHasProjects] = useState(false);
+    const [projects, setProjects] = useState<services.Project[]>([]);
 
     useEffect(() => {
         // Fetch initial data
         GetUserProfile().then(setUser);
         GetTasks().then(setTasks);
-        GetProjects().then(projects => setHasProjects(projects.length > 0));
+        GetProjects().then(projs => {
+            setProjects(projs || []);
+            setHasProjects(projs && projs.length > 0);
+        });
     }, []);
 
     const handleAddTask = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!newTaskTitle.trim()) return;
+        if (!newTaskTitle.trim() || !hasProjects) return;
 
         try {
-            const updatedTasks = await CreateTask(newTaskTitle);
+            // Default to first project for now
+            const updatedTasks = await CreateTask(newTaskTitle, projects[0].id);
             setTasks(updatedTasks);
             setNewTaskTitle("");
             // Reward for planning!
