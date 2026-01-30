@@ -1,6 +1,5 @@
 import { useState } from "react";
-import RootLayout from "./layouts/RootLayout";
-import Dashboard from "./pages/Dashboard";
+import Workspace from "./layouts/Workspace";
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import CustomTitleBar from "./components/CustomTitleBar";
@@ -35,9 +34,7 @@ function App() {
                 />
             )}
             {view === "dashboard" && (
-                <RootLayout>
-                    <Dashboard />
-                </RootLayout>
+                <Workspace />
             )}
         </>
     )

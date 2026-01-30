@@ -1,11 +1,17 @@
 import { ReactNode } from "react";
 import Sidebar from "../components/Sidebar";
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+interface RootLayoutProps {
+    children: ReactNode;
+    activePage: string;
+    onNavigate: (page: string) => void;
+}
+
+export default function RootLayout({ children, activePage, onNavigate }: RootLayoutProps) {
     return (
         <div className="flex h-screen w-screen overflow-hidden bg-background text-text">
             {/* Sidebar (Fixed Left) */}
-            <Sidebar />
+            <Sidebar activePage={activePage} onNavigate={onNavigate} />
 
             {/* Main Content Area */}
             <main className="flex-1 mt-[30px] overflow-auto relative">
