@@ -60,7 +60,7 @@ export default function Dashboard() {
     const progress = (user.xp / 100) * 100; // Assuming 100 XP per level
 
     return (
-        <div className="flex-1 h-screen overflow-y-auto bg-[#050505] p-8 text-white font-sans">
+        <div className="text-white font-sans">
             {/* Header / Stats */}
             <div className="mb-10">
                 <div className="flex justify-between items-end mb-6">
@@ -121,15 +121,15 @@ export default function Dashboard() {
                         <div
                             key={task.id}
                             className={`group flex items-center gap-4 p-4 rounded-xl border transition-all duration-200 ${task.completed
-                                    ? "bg-[#0A0A0C] border-transparent opacity-50"
-                                    : "bg-[#121217] border-white/5 hover:border-purple-500/30"
+                                ? "bg-[#0A0A0C] border-transparent opacity-50"
+                                : "bg-[#121217] border-white/5 hover:border-purple-500/30"
                                 }`}
                         >
                             <button
                                 onClick={() => handleToggleTask(task.id)}
                                 className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center transition-colors ${task.completed
-                                        ? "bg-purple-500 border-purple-500 text-black"
-                                        : "border-gray-600 hover:border-purple-400"
+                                    ? "bg-purple-500 border-purple-500 text-black"
+                                    : "border-gray-600 hover:border-purple-400"
                                     }`}
                             >
                                 {task.completed && <Check size={14} strokeWidth={3} />}

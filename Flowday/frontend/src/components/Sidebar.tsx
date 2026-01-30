@@ -1,9 +1,10 @@
-import { LayoutDashboard, Calendar, CheckSquare, BarChart2, MessageSquare, Users, Settings, Folder } from "lucide-react";
+import { LayoutDashboard, Calendar, CheckSquare, BarChart2, MessageSquare, Users, Settings, Folder, Plus } from "lucide-react";
 import { cn } from "../lib/utils";
 import { useState } from "react";
 
 export default function Sidebar() {
     const [active, setActive] = useState("dashboard");
+    const [projects, setProjects] = useState<string[]>([]); // Dynamic projects
 
     const menuItems = [
         { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -14,9 +15,11 @@ export default function Sidebar() {
         { id: "team", icon: Users, label: "Team" },
     ];
 
-    const projects = [
-        { id: "inspector", label: "inspector_os" },
-    ];
+    const handleAddProject = () => {
+        // TODO: Implement project creation dialog
+        const name = prompt("Enter project name:");
+        if (name) setProjects([...projects, name]);
+    };
 
     return (
         <aside className="w-[240px] h-screen bg-background/50 backdrop-blur-xl border-r border-white/5 flex flex-col pt-[40px]">
@@ -48,14 +51,22 @@ export default function Sidebar() {
 
             {/* Projects */}
             <div className="px-3 py-4 mt-4">
-                <div className="px-3 text-xs font-semibold text-text-dim uppercase mb-2">Projects</div>
-                {projects.map((item) => (
+                <div className="px-3 text-xs font-semibold text-text-dim uppercase mb-2 flex justify-between items-center">
+                    Projects
+                    <button onClick={handleAddProject} className="hover:text-white transition-colors">
+                        <Plus size={14} />
+                    </button>
+                </div>
+                {projects.length === 0 && (
+                    <div className="px-3 text-xs text-text-dim italic">No projects yet</div>
+                )}
+                {projects.map((item, idx) => (
                     <button
-                        key={item.id}
+                        key={idx}
                         className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-text-dim hover:text-text hover:bg-white/5 transition-all"
                     >
                         <Folder size={16} />
-                        {item.label}
+                        {item}
                     </button>
                 ))}
             </div>
