@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"time"
 
+	"Flowday/config"
+
 	"github.com/wailsapp/wails/v2/pkg/runtime"
 )
 
@@ -52,9 +54,12 @@ func (a *AuthService) StartGoogleLogin() {
 }
 
 func (a *AuthService) handleLoginRequest(w http.ResponseWriter, r *http.Request) {
+	// Load config from separate package
+	cfg := config.FlowdayFirebaseConfig
+
 	// Serve the HTML page with Firebase SDK
-	// Using the keys user provided earlier
-	html := `
+	// Injected via fmt.Sprintf
+	html := fmt.Sprintf(`
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -74,13 +79,13 @@ func (a *AuthService) handleLoginRequest(w http.ResponseWriter, r *http.Request)
 		  import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
 
 		  const firebaseConfig = {
-			apiKey: "AIzaSyD0f4YxmW3O82_efX-FNvOzobwMMN4A2j0",
-			authDomain: "flowday-com.firebaseapp.com",
-			projectId: "flowday-com",
-			storageBucket: "flowday-com.firebasestorage.app",
-			messagingSenderId: "735118858084",
-			appId: "1:735118858084:web:dbb3af01a8e73c5bca8c71",
-			measurementId: "G-N0XS7FTXMM"
+			apiKey: "%s",
+			authDomain: "%s",
+			projectId: "%s",
+			storageBucket: "%s",
+			messagingSenderId: "%s",
+			appId: "%s",
+			measurementId: "%s"
 		  };
 
 		  const app = initializeApp(firebaseConfig);
@@ -104,13 +109,11 @@ func (a *AuthService) handleLoginRequest(w http.ResponseWriter, r *http.Request)
 				alert("Login failed: " + error.message);
 			});
 		  };
-		  
-		  // Auto-trigger if simple
-		  // signIn();
 		</script>
 	</body>
 	</html>
-	`
+	`, cfg.APIKey, cfg.AuthDomain, cfg.ProjectID, cfg.StorageBucket, cfg.MessagingSenderID, cfg.AppID, cfg.MeasurementID)
+
 	w.Header().Set("Content-Type", "text/html")
 	w.Write([]byte(html))
 }
