@@ -11,6 +11,7 @@ type Task struct {
 	Title     string `json:"title"`
 	Completed bool   `json:"completed"`
 	CreatedAt string `json:"createdAt"`
+	ProjectID string `json:"projectId"` // New field
 }
 
 type TaskService struct {
@@ -33,12 +34,13 @@ func (t *TaskService) GetTasks() []Task {
 	return t.tasks
 }
 
-func (t *TaskService) CreateTask(title string) []Task {
+func (t *TaskService) CreateTask(title string, projectID string) []Task {
 	newTask := Task{
 		ID:        fmt.Sprintf("%d", time.Now().UnixNano()),
 		Title:     title,
 		Completed: false,
 		CreatedAt: time.Now().Format(time.RFC3339),
+		ProjectID: projectID,
 	}
 	t.tasks = append(t.tasks, newTask)
 	return t.tasks

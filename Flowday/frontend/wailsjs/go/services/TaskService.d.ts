@@ -3,7 +3,7 @@
 import {services} from '../models';
 import {context} from '../models';
 
-export function CreateTask(arg1:string):Promise<Array<services.Task>>;
+export function CreateTask(arg1:string,arg2:string):Promise<Array<services.Task>>;
 
 export function DeleteTask(arg1:string):Promise<Array<services.Task>>;
 
