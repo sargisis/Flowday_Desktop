@@ -1,6 +1,8 @@
-import { LayoutDashboard, Calendar, CheckSquare, BarChart2, MessageSquare, Users, Settings, Folder, Plus } from "lucide-react";
+import { LayoutDashboard, Calendar, CheckSquare, BarChart2, MessageSquare, Users, Settings, Folder, Plus, Trash2 } from "lucide-react";
 import { cn } from "../lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { GetProjects, CreateProject, DeleteProject } from "../../wailsjs/go/services/ProjectService";
+import { services } from "../../wailsjs/go/models";
 
 interface SidebarProps {
     activePage: string;
@@ -8,7 +10,11 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
-    const [projects, setProjects] = useState<string[]>([]); // Dynamic projects
+    const [projects, setProjects] = useState<services.Project[]>([]);
+
+    useEffect(() => {
+        GetProjects().then((data) => setProjects(data || []));
+    }, []);
 
     const menuItems = [
         { id: "dashboard", icon: LayoutDashboard, label: "Dashboard" },
@@ -19,10 +25,20 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
         { id: "team", icon: Users, label: "Team" },
     ];
 
-    const handleAddProject = () => {
-        // TODO: Implement project creation dialog
+    const handleAddProject = async () => {
         const name = prompt("Enter project name:");
-        if (name) setProjects([...projects, name]);
+        if (name) {
+            const updated = await CreateProject(name);
+            setProjects(updated || []);
+        }
+    };
+
+    const handleDeleteProject = async (id: string, e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (confirm("Are you sure you want to delete this project?")) {
+            const updated = await DeleteProject(id);
+            setProjects(updated || []);
+        }
     };
 
     return (
@@ -61,17 +77,32 @@ export default function Sidebar({ activePage, onNavigate }: SidebarProps) {
                         <Plus size={14} />
                     </button>
                 </div>
-                {projects.length === 0 && (
-                    <div className="px-3 text-xs text-text-dim italic">No projects yet</div>
-                )}
-                {projects.map((item, idx) => (
+                {(!projects || projects.length === 0) && (
                     <button
-                        key={idx}
-                        className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-text-dim hover:text-text hover:bg-white/5 transition-all"
+                        onClick={handleAddProject}
+                        className="w-full text-left px-3 py-4 text-xs text-text-dim hover:text-primary transition-colors border border-dashed border-white/10 rounded-lg hover:border-primary/50 flex flex-col gap-1"
                     >
-                        <Folder size={16} />
-                        {item}
+                        <span className="font-semibold">+ Create Project</span>
+                        <span className="opacity-50">Organize your work</span>
                     </button>
+                )}
+                {projects && projects.map((item) => (
+                    <div
+                        key={item.id}
+                        className="group w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm text-text-dim hover:text-text hover:bg-white/5 transition-all cursor-pointer"
+                        onClick={() => onNavigate(`project-${item.id}`)} // Placeholder navigation
+                    >
+                        <div className="flex items-center gap-3">
+                            <Folder size={16} />
+                            <span>{item.name}</span>
+                        </div>
+                        <button
+                            onClick={(e) => handleDeleteProject(item.id, e)}
+                            className="opacity-0 group-hover:opacity-100 hover:text-red-400 transition-opacity"
+                        >
+                            <Trash2 size={14} />
+                        </button>
+                    </div>
                 ))}
             </div>
 

@@ -1,5 +1,41 @@
 export namespace services {
 	
+	export class CEvent {
+	    id: string;
+	    title: string;
+	    start: string;
+	    end: string;
+	    type: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new CEvent(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.title = source["title"];
+	        this.start = source["start"];
+	        this.end = source["end"];
+	        this.type = source["type"];
+	    }
+	}
+	export class Project {
+	    id: string;
+	    name: string;
+	    color: string;
+	
+	    static createFrom(source: any = {}) {
+	        return new Project(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.id = source["id"];
+	        this.name = source["name"];
+	        this.color = source["color"];
+	    }
+	}
 	export class Task {
 	    id: string;
 	    title: string;

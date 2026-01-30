@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Plus, Trash2, Check, Flame, Trophy, Activity, Play } from "lucide-react";
+import { GetProjects } from "../../wailsjs/go/services/ProjectService";
 import { GetUserProfile, AddXP } from "../../wailsjs/go/services/UserService";
 import { GetTasks, CreateTask, ToggleTask, DeleteTask } from "../../wailsjs/go/services/TaskService";
 import { services } from "../../wailsjs/go/models";
@@ -8,11 +9,13 @@ export default function Dashboard() {
     const [user, setUser] = useState<services.UserProfile | null>(null);
     const [tasks, setTasks] = useState<services.Task[]>([]);
     const [newTaskTitle, setNewTaskTitle] = useState("");
+    const [hasProjects, setHasProjects] = useState(false);
 
     useEffect(() => {
         // Fetch initial data
         GetUserProfile().then(setUser);
         GetTasks().then(setTasks);
+        GetProjects().then(projects => setHasProjects(projects.length > 0));
     }, []);
 
     const handleAddTask = async (e: React.FormEvent) => {
@@ -149,14 +152,15 @@ export default function Dashboard() {
 
                 {/* Add Task Input */}
                 <form onSubmit={handleAddTask} className="mt-4 flex gap-2 group">
-                    <div className="flex-1 bg-[#121217] border border-white/5 group-focus-within:border-gray-600 rounded-xl px-4 py-3 flex items-center gap-3 transition-colors">
+                    <div className={`flex-1 bg-[#121217] border border-white/5 rounded-xl px-4 py-3 flex items-center gap-3 transition-colors ${!hasProjects ? 'opacity-50 cursor-not-allowed' : 'group-focus-within:border-gray-600'}`}>
                         <Plus size={20} className="text-gray-500" />
                         <input
                             type="text"
                             value={newTaskTitle}
                             onChange={(e) => setNewTaskTitle(e.target.value)}
-                            placeholder="Add a new task..."
-                            className="bg-transparent border-none outline-none text-white placeholder-gray-600 w-full"
+                            disabled={!hasProjects}
+                            placeholder={hasProjects ? "Add a new task..." : "Create a project first..."}
+                            className="bg-transparent border-none outline-none text-white placeholder-gray-600 w-full disabled:cursor-not-allowed"
                         />
                     </div>
                 </form>

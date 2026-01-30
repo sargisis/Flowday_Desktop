@@ -19,12 +19,9 @@ type TaskService struct {
 }
 
 func NewTaskService() *TaskService {
-	// Mock initial tasks
+	// Start with empty tasks
 	return &TaskService{
-		tasks: []Task{
-			{ID: "1", Title: "Rocket Launch Protocol", Completed: false, CreatedAt: time.Now().String()},
-			{ID: "2", Title: "Deep Work Session", Completed: true, CreatedAt: time.Now().String()},
-		},
+		tasks: []Task{},
 	}
 }
 
@@ -58,7 +55,8 @@ func (t *TaskService) ToggleTask(id string) []Task {
 }
 
 func (t *TaskService) DeleteTask(id string) []Task {
-	var newTasks []Task
+	// Initialize with empty slice to ensure [] is returned instead of nil
+	newTasks := []Task{}
 	for _, task := range t.tasks {
 		if task.ID != id {
 			newTasks = append(newTasks, task)

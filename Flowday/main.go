@@ -22,6 +22,8 @@ func main() {
 	authService := services.NewAuthService()
 	userService := services.NewUserService()
 	taskService := services.NewTaskService()
+	projectService := services.NewProjectService()
+	calendarService := services.NewCalendarService()
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -38,12 +40,16 @@ func main() {
 			authService.Startup(ctx)
 			userService.Startup(ctx)
 			taskService.Startup(ctx)
+			projectService.Startup(ctx)
+			calendarService.Startup(ctx)
 		},
 		Bind: []interface{}{
 			app,
 			authService,
 			userService,
 			taskService,
+			projectService,
+			calendarService,
 		},
 	})
 
